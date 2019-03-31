@@ -16,18 +16,11 @@ public class Point {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long pointId;
 
-	@Column(nullable = false)
-	private String reviewId;
-
 	@Column
 	private String content;
 
 	@Column
 	private Long value = 0L;
-
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
 
 	@Column(nullable = false)
 	private PointType pointType;
@@ -38,9 +31,17 @@ public class Point {
 	@Column(nullable = false)
 	private LocalDateTime updateDatetime;
 
+	@OneToOne
+	@JoinColumn(name = "review_id")
+	private Review review;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
+
 	@Builder
-	public Point(String reviewId, User user, PointType pointType, String content) {
-		this.reviewId = reviewId;
+	public Point(Review review, User user, PointType pointType, String content) {
+		this.review = review;
 		this.user = user;
 		this.pointType = pointType;
 		this.content = content;
