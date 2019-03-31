@@ -1,20 +1,26 @@
 package com.triple.point.service;
 
 import com.triple.point.domain.Point;
+import com.triple.point.domain.PointType;
+import com.triple.point.domain.Review;
 import com.triple.point.domain.User;
 import com.triple.point.dto.EventDto;
 import com.triple.point.repository.PointRepository;
+import com.triple.point.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PointService {
-	private PointRepository pointRepository;
+	private final PointRepository pointRepository;
+	private final ReviewRepository reviewRepository;
 
-	public PointService(PointRepository pointRepository) {
+	public PointService(PointRepository pointRepository, ReviewRepository reviewRepository) {
 		this.pointRepository = pointRepository;
+		this.reviewRepository = reviewRepository;
 	}
 
 	public void routing(EventDto eventDto) {
@@ -28,7 +34,15 @@ public class PointService {
 
 	@Transactional
 	public void savePoint(EventDto eventDto) {
-		pointRepository.save(eventDto.toPointEntity());
+		Optional<Review> review = reviewRepository.findById(eventDto.getReviewId());
+
+		Point point = Point.builder()
+				.pointType(PointType.REVIEW)
+				.review(review.get())
+				.user(new User(eventDto.getUserId()))
+				.build();
+
+		pointRepository.save(point);
 	}
 
 	public int getUserPoint(String userId) {

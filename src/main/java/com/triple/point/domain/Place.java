@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class Place {
 	private String placeId;
 
 	@OneToMany(mappedBy = "place")
+	@OrderBy("create_date_time ASC")
 	private List<Review> reviewList = new ArrayList<>();
 
 	public Place(String placeId) {
