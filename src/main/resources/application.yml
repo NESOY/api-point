@@ -8,15 +8,9 @@ spring:
   profiles: local
   datasource:
     url: jdbc:mysql://localhost:3306/point?serverTimezone=UTC
-    data: classpath:test-data.sql
     username: root
     password:
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: create-drop # create-drop, create
-
-    #  h2:
-    ##    console:
-    ##      enabled: true
-
