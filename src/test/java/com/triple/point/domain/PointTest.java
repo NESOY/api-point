@@ -29,4 +29,12 @@ public class PointTest {
 		Point invalidPhotoPoint = Point.builder().review(new Review("VALID-REVIEW", "123", emptyList())).build();
 		assertEquals(1L, (long) invalidPhotoPoint.getPoint());
 	}
+
+	@Test
+	public void getPoint_리뷰가_첫번째인_경우_점수를_반환한다() {
+		Review review = Review.builder().place(new Place()).build();
+		Point point = Point.builder().review(review).build();
+
+		assertEquals(1L, (long) point.getPoint());
+	}
 }

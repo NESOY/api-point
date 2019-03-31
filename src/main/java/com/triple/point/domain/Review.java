@@ -1,5 +1,6 @@
 package com.triple.point.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +31,11 @@ public class Review {
 	@OneToMany(mappedBy = "review")
 	private List<Photo> photoList = new ArrayList<>();
 
+	@ManyToOne
+	@JoinColumn(name = "place_id")
+	private Place place;
+
+
 	public Review(String reviewId, String content) {
 		this.reviewId = reviewId;
 		this.content = content;
@@ -43,5 +49,19 @@ public class Review {
 		this.photoList = photoList;
 		this.createDateTime = LocalDateTime.now();
 		this.updateDateTime = LocalDateTime.now();
+	}
+
+	@Builder
+	public Review(String reviewId, String content, List<Photo> photoList, Place place) {
+		this.reviewId = reviewId;
+		this.content = content;
+		this.photoList = photoList;
+		this.place = place;
+		this.createDateTime = LocalDateTime.now();
+		this.updateDateTime = LocalDateTime.now();
+	}
+
+	public boolean isFirstReview() {
+		return place.isFirstReview(this);
 	}
 }

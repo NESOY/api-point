@@ -59,6 +59,9 @@ public class Point {
 		if (isNotEmpty(review.getPhotoList()))
 			sumOfPoint += 1L;
 
+		if (review.isFirstReview())
+			sumOfPoint += 1L;
+
 		return sumOfPoint;
 	}
 }

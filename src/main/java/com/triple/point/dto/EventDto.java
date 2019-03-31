@@ -27,7 +27,7 @@ public class EventDto {
 
 		return Point.builder()
 				.pointType(type)
-				.review(new Review(reviewId, content, photoList))
+				.review(new Review(reviewId, content, photoList, new Place(placeId)))
 				.user(new User(userId))
 				.build();
 	}
