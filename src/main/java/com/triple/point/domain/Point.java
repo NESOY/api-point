@@ -17,9 +17,6 @@ public class Point {
 	private Long pointId;
 
 	@Column
-	private String content;
-
-	@Column
 	private Long value = 0L;
 
 	@Column(nullable = false)
@@ -40,11 +37,10 @@ public class Point {
 	private User user;
 
 	@Builder
-	public Point(Review review, User user, PointType pointType, String content) {
+	public Point(Review review, User user, PointType pointType) {
 		this.review = review;
 		this.user = user;
 		this.pointType = pointType;
-		this.content = content;
 		this.createDatetime = LocalDateTime.now();
 		this.updateDatetime = LocalDateTime.now();
 		this.value = getPoint();
@@ -54,7 +50,7 @@ public class Point {
 	public Long getPoint() {
 		Long sumOfPoint = 0L;
 
-		if (Strings.isNotBlank(content))
+		if (Strings.isNotBlank(review.getContent()))
 			sumOfPoint += 1L;
 
 		return sumOfPoint;

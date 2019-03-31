@@ -23,8 +23,7 @@ public class EventDto {
 	public Point toPointEntity() {
 		return Point.builder()
 				.pointType(type)
-				.content(content)
-				.review(new Review(reviewId))
+				.review(new Review(reviewId, content))
 				.user(new User(userId))
 				.build();
 	}

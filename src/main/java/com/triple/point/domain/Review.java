@@ -1,5 +1,6 @@
 package com.triple.point.domain;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -8,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @NoArgsConstructor
 public class Review {
@@ -26,7 +28,10 @@ public class Review {
 	@OneToOne(mappedBy = "review")
 	private Point point;
 
-	public Review(String reviewId) {
+	public Review(String reviewId, String content) {
 		this.reviewId = reviewId;
+		this.content = content;
+		this.createDateTime = LocalDateTime.now();
+		this.updateDateTime = LocalDateTime.now();
 	}
 }
