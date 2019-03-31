@@ -28,7 +28,7 @@ public class PointService {
 
 	@Transactional
 	public void savePoint(EventDto eventDto) {
-		pointRepository.save(new Point(eventDto.getReviewId(), new User(eventDto.getUserId()), eventDto.getType()));
+		pointRepository.save(eventDto.toPointEntity());
 	}
 
 	public int getUserPoint(String userId) {

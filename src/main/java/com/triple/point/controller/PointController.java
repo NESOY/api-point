@@ -14,7 +14,7 @@ public class PointController {
 	}
 
 	@GetMapping("/users/{userId}")
-	public int getPoint(@PathVariable String userId) {
+	public int getUserPoint(@PathVariable String userId) {
 		return pointService.getUserPoint(userId);
 	}
 
