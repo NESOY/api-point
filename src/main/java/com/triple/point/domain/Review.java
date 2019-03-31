@@ -3,11 +3,10 @@ package com.triple.point.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -27,6 +26,9 @@ public class Review {
 
 	@OneToOne(mappedBy = "review")
 	private Point point;
+
+	@OneToMany(mappedBy = "review")
+	private List<Photo> photoList = new ArrayList<>();
 
 	public Review(String reviewId, String content) {
 		this.reviewId = reviewId;
