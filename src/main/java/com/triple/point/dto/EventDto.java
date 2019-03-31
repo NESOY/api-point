@@ -1,13 +1,12 @@
 package com.triple.point.dto;
 
-import com.triple.point.domain.*;
+import com.triple.point.domain.ActionType;
+import com.triple.point.domain.PointType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 
 @Getter
@@ -21,14 +20,4 @@ public class EventDto {
 	private String userId;
 	private String placeId;
 	private List<String> attachedPhotoIds;
-
-	public Point toPointEntity() {
-		List<Photo> photoList = attachedPhotoIds.stream().map(Photo::new).collect(toList());
-
-		return Point.builder()
-				.pointType(type)
-				.review(new Review(reviewId, content, photoList, new Place(placeId)))
-				.user(new User(userId))
-				.build();
-	}
 }
