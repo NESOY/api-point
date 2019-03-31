@@ -45,8 +45,9 @@ public class PointService {
 		pointRepository.save(point);
 	}
 
-	public int getUserPoint(String userId) {
+	public long getUserPoint(String userId) {
 		List<Point> pointList = pointRepository.findByUser(new User(userId));
-		return pointList.size();
+
+		return pointList.stream().mapToLong(Point::getValue).sum();
 	}
 }
