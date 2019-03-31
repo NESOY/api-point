@@ -3,10 +3,13 @@ package com.triple.point.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import static org.apache.logging.log4j.util.Strings.isNotBlank;
+import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpty;
+
 
 @Entity
 @Getter
@@ -50,7 +53,10 @@ public class Point {
 	public Long getPoint() {
 		Long sumOfPoint = 0L;
 
-		if (Strings.isNotBlank(review.getContent()))
+		if (isNotBlank(review.getContent()))
+			sumOfPoint += 1L;
+
+		if (isNotEmpty(review.getPhotoList()))
 			sumOfPoint += 1L;
 
 		return sumOfPoint;

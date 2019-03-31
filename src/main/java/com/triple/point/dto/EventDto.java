@@ -7,6 +7,8 @@ import lombok.ToString;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 
 @Getter
 @Setter
@@ -21,9 +23,11 @@ public class EventDto {
 	private List<String> attachedPhotoIds;
 
 	public Point toPointEntity() {
+		List<Photo> photoList = attachedPhotoIds.stream().map(Photo::new).collect(toList());
+
 		return Point.builder()
 				.pointType(type)
-				.review(new Review(reviewId, content))
+				.review(new Review(reviewId, content, photoList))
 				.user(new User(userId))
 				.build();
 	}

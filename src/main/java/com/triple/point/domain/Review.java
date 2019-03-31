@@ -36,4 +36,12 @@ public class Review {
 		this.createDateTime = LocalDateTime.now();
 		this.updateDateTime = LocalDateTime.now();
 	}
+
+	public Review(String reviewId, String content, List<Photo> photoList) {
+		this.reviewId = reviewId;
+		this.content = content;
+		this.photoList = photoList;
+		this.createDateTime = LocalDateTime.now();
+		this.updateDateTime = LocalDateTime.now();
+	}
 }
