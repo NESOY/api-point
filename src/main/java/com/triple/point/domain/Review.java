@@ -3,6 +3,7 @@ package com.triple.point.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,12 +13,16 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
+@ToString
 public class Review {
 	@Id
-	private String reviewId;
+	private String id;
 
 	@Column
 	private String content;
+
+	@Column
+	private Boolean isDeleted;
 
 	@Column(nullable = false)
 	private LocalDateTime createDateTime;
@@ -35,33 +40,39 @@ public class Review {
 	@JoinColumn(name = "place_id")
 	private Place place;
 
-
-	public Review(String reviewId, String content) {
-		this.reviewId = reviewId;
+	public Review(String id, String content) {
+		this.id = id;
 		this.content = content;
 		this.createDateTime = LocalDateTime.now();
 		this.updateDateTime = LocalDateTime.now();
+		this.isDeleted = false;
 	}
 
-	public Review(String reviewId, String content, List<Photo> photoList) {
-		this.reviewId = reviewId;
+	public Review(String id, String content, List<Photo> photoList) {
+		this.id = id;
 		this.content = content;
 		this.photoList = photoList;
 		this.createDateTime = LocalDateTime.now();
 		this.updateDateTime = LocalDateTime.now();
+		this.isDeleted = false;
 	}
 
 	@Builder
-	public Review(String reviewId, String content, List<Photo> photoList, Place place) {
-		this.reviewId = reviewId;
+	public Review(String id, String content, List<Photo> photoList, Place place, Boolean isDeleted) {
+		this.id = id;
 		this.content = content;
 		this.photoList = photoList;
 		this.place = place;
+		this.isDeleted = isDeleted;
 		this.createDateTime = LocalDateTime.now();
 		this.updateDateTime = LocalDateTime.now();
 	}
 
 	public boolean isFirstReview() {
 		return place.isFirstReview(this);
+	}
+
+	public void deleteReview() {
+		this.isDeleted = true;
 	}
 }

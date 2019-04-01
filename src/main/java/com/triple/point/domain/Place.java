@@ -1,5 +1,6 @@
 package com.triple.point.domain;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
@@ -10,17 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Place {
 	@Id
-	private String placeId;
+	private String id;
 
 	@OneToMany(mappedBy = "place")
 	@OrderBy("create_date_time ASC")
 	private List<Review> reviewList = new ArrayList<>();
 
-	public Place(String placeId) {
-		this.placeId = placeId;
+	public Place(String id) {
+		this.id = id;
 	}
 
 	public boolean isFirstReview(Review review) {

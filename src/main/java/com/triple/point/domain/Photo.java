@@ -11,12 +11,12 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 public class Photo {
 	@Id
-	private String photoId;
+	private String id;
 	@ManyToOne
 	@JoinColumn(name = "review_id")
 	private Review review;
 
-	public Photo(String photoId) {
-		this.photoId = photoId;
+	public Photo(String id) {
+		this.id = id;
 	}
 }

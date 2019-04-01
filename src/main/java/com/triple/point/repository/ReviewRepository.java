@@ -1,7 +1,16 @@
 package com.triple.point.repository;
 
 import com.triple.point.domain.Review;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface ReviewRepository extends JpaRepository<Review, String> {
+import java.util.List;
+import java.util.Optional;
+
+public interface ReviewRepository extends CrudRepository<Review, String> {
+
+	Optional<Review> findByIdAndIsDeletedFalse(String reviewId);
+
+	Optional<Review> findByIdAndIsDeletedTrue(String reviewId);
+
+	List<Review> findByPlaceIdAndIsDeletedFalseOrderByCreateDateTime(String placeId);
 }

@@ -28,26 +28,73 @@ public class PointService {
 			case ADD:
 				savePoint(eventDto);
 			case MOD:
+				modifyPoint(eventDto);
 			case DELETE:
+				deletePoint(eventDto);
 		}
 	}
 
 	@Transactional
-	public void savePoint(EventDto eventDto) {
-		Optional<Review> review = reviewRepository.findById(eventDto.getReviewId());
+	public void modifyPoint(EventDto eventDto) {
+		// 글만 있는 경우 사진을 추가하면 +1
+		// 사진만 있는 경우 글을 추가하면 +1
+		// 글과 사진이 모두 있는 경우 사진을 모두 삭제하면 -1
+		// 글과 사진이 모두 있는 경우 글을 모두 삭제하면 -1
+	}
 
-		Point point = Point.builder()
-				.pointType(PointType.REVIEW)
-				.review(review.get())
-				.user(eventDto.toUserEntity())
-				.build();
+	@Transactional
+	public void deletePoint(EventDto eventDto) { // 리뷰 삭제 후 Event
+		Optional<Review> findReview = reviewRepository.findByIdAndIsDeletedTrue(eventDto.getReviewId());
 
-		pointRepository.save(point);
+		if (findReview.isPresent()) {
+			Review deletedReview = findReview.get();
+
+			Optional<Point> point = pointRepository.findByReviewId(deletedReview.getId());
+			point.ifPresent(pointRepository::delete);
+			// 로그로 남긴다.
+
+			if (deletedReview.isFirstReview()) {
+				Optional<Review> firstPlaceReview = getFirstPlaceReview(deletedReview.getPlace().getId());
+
+				firstPlaceReview.ifPresent(review -> {
+					Point updatePoint = Point.builder()
+							.pointType(PointType.REVIEW) // Bonus
+							.review(review)
+							.user(eventDto.toUserEntity())
+							.build();
+
+					pointRepository.save(updatePoint);
+					// 로그로 남긴다.
+				});
+			}
+		}
+	}
+
+	@Transactional
+	public void savePoint(EventDto eventDto) { // Review 생성 후 Event
+		Optional<Review> review = reviewRepository.findByIdAndIsDeletedFalse(eventDto.getReviewId());
+
+		if (review.isPresent()) {
+			Point point = Point.builder()
+					.pointType(PointType.REVIEW)
+					.review(review.get())
+					.user(eventDto.toUserEntity())
+					.build();
+
+			pointRepository.save(point);
+			// 로그를 남긴다.
+		}
 	}
 
 	public long getUserPoint(String userId) {
 		List<Point> pointList = pointRepository.findByUser(new User(userId));
 
 		return pointList.stream().mapToLong(Point::getValue).sum();
+	}
+
+
+	private Optional<Review> getFirstPlaceReview(String placeId) {
+		List<Review> reviewList = reviewRepository.findByPlaceIdAndIsDeletedFalseOrderByCreateDateTime(placeId);
+		return Optional.of(reviewList.get(0));
 	}
 }
