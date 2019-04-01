@@ -39,7 +39,7 @@ public class PointService {
 		Point point = Point.builder()
 				.pointType(PointType.REVIEW)
 				.review(review.get())
-				.user(new User(eventDto.getUserId()))
+				.user(eventDto.toUserEntity())
 				.build();
 
 		pointRepository.save(point);
