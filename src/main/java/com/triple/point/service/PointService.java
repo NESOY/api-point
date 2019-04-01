@@ -27,10 +27,13 @@ public class PointService {
 		switch (eventDto.getAction()) {
 			case ADD:
 				savePoint(eventDto);
+				break;
 			case MOD:
 				modifyPoint(eventDto);
+				break;
 			case DELETE:
 				deletePoint(eventDto);
+				break;
 		}
 	}
 
@@ -43,7 +46,7 @@ public class PointService {
 	}
 
 	@Transactional
-	public void deletePoint(EventDto eventDto) { // 리뷰 삭제 후 Event
+	public void deletePoint(EventDto eventDto) {
 		Optional<Review> findReview = reviewRepository.findByIdAndIsDeletedTrue(eventDto.getReviewId());
 
 		if (findReview.isPresent()) {
@@ -51,14 +54,13 @@ public class PointService {
 
 			Optional<Point> point = pointRepository.findByReviewId(deletedReview.getId());
 			point.ifPresent(pointRepository::delete);
-			// 로그로 남긴다.
 
 			if (deletedReview.isFirstReview()) {
 				Optional<Review> firstPlaceReview = getFirstPlaceReview(deletedReview.getPlace().getId());
 
 				firstPlaceReview.ifPresent(review -> {
 					Point updatePoint = Point.builder()
-							.pointType(PointType.REVIEW) // Bonus
+							.pointType(PointType.REVIEW)
 							.review(review)
 							.user(eventDto.toUserEntity())
 							.build();
@@ -71,7 +73,7 @@ public class PointService {
 	}
 
 	@Transactional
-	public void savePoint(EventDto eventDto) { // Review 생성 후 Event
+	public void savePoint(EventDto eventDto) {
 		Optional<Review> review = reviewRepository.findByIdAndIsDeletedFalse(eventDto.getReviewId());
 
 		if (review.isPresent()) {
