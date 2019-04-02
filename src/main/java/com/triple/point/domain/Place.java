@@ -29,10 +29,9 @@ public class Place {
 	public boolean isFirstReview(Review review) {
 		Review firstReview = reviewList.stream()
 				.filter(Review::isNotDeleted)
-				.findFirst().get();
+				.findFirst().orElse(review);
 
-
-		return reviewList.isEmpty() || firstReview.equals(review);
+		return firstReview.equals(review);
 	}
 
 	public boolean isPastFirstReview(Review review) {

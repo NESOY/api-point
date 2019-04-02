@@ -1,5 +1,6 @@
 package com.triple.point.domain;
 
+import com.triple.point.fixture.ReviewFixture;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -7,34 +8,40 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class PointTest {
+public class PointTest extends ReviewFixture {
+	private static final long BONUS_POINT = 1L;
 
 	@Test
 	public void getPoint_컨텐츠가_1자_이상인_경우_점수를_반환한다() {
-		Point validContentPoint = Point.builder().review(new Review("VALID-REVIEW", "Nesoy")).build();
-		assertEquals(1L, (long) validContentPoint.getPoint());
+		review.setContent("CONTENT");
+		Point validContentPoint = Point.builder().review(review).build();
+		assertEquals(1L + BONUS_POINT, (long) validContentPoint.getValue());
 
-		Point invalidContentPoint = Point.builder().review(new Review("INVALID-REVIEW", "")).build();
-		assertEquals(0L, (long) invalidContentPoint.getPoint());
+		review.setContent("");
+		Point invalidContentPoint = Point.builder().review(review).build();
+		assertEquals(BONUS_POINT, (long) invalidContentPoint.getValue());
 	}
 
 	@Test
 	public void getPoint_사진이_1장_이상인_경우_점수를_반환한다() {
 		List<Photo> photoList = new ArrayList<>();
 		photoList.add(new Photo());
-		Point validPhotoPoint = Point.builder().review(new Review("VALID-REVIEW", "123", photoList)).build();
-		assertEquals(2L, (long) validPhotoPoint.getPoint());
+		review.setPhotoList(photoList);
+		Point validPhotoPoint = Point.builder().review(review).build();
+		assertEquals(1L + BONUS_POINT, (long) validPhotoPoint.getValue());
 
-		Point invalidPhotoPoint = Point.builder().review(new Review("VALID-REVIEW", "123", emptyList())).build();
-		assertEquals(1L, (long) invalidPhotoPoint.getPoint());
+		review.setPhotoList(emptyList());
+		Point invalidPhotoPoint = Point.builder().review(review).build();
+		assertEquals(BONUS_POINT, (long) invalidPhotoPoint.getValue());
 	}
 
 	@Test
 	public void getPoint_리뷰가_첫번째인_경우_점수를_반환한다() {
-		Review review = Review.builder().place(new Place()).build();
 		Point point = Point.builder().review(review).build();
 
-		assertEquals(1L, (long) point.getPoint());
+		assertTrue(review.isFirstReview());
+		assertEquals(BONUS_POINT, (long) point.getValue());
 	}
 }
