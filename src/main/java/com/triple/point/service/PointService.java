@@ -10,6 +10,7 @@ import com.triple.point.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,37 +40,41 @@ public class PointService {
 
 	@Transactional
 	public void modifyPoint(EventDto eventDto) {
-		// 글만 있는 경우 사진을 추가하면 +1
-		// 사진만 있는 경우 글을 추가하면 +1
-		// 글과 사진이 모두 있는 경우 사진을 모두 삭제하면 -1
-		// 글과 사진이 모두 있는 경우 글을 모두 삭제하면 -1
+		Optional<Review> findReview = reviewRepository.findByIdAndIsDeletedFalse(eventDto.getReviewId());
+		if (findReview.isPresent()) {
+			Review modifiedReview = findReview.get();
+
+			Point modifiedPoint = Point.builder()
+					.pointType(PointType.REVIEW)
+					.review(modifiedReview)
+					.user(eventDto.toUserEntity())
+					.build();
+
+			pointRepository.save(modifiedPoint);
+			// 로그
+		}
 	}
 
 	@Transactional
 	public void deletePoint(EventDto eventDto) {
-		Optional<Review> findReview = reviewRepository.findByIdAndIsDeletedTrue(eventDto.getReviewId());
+		Review deletedReview = reviewRepository.findByIdAndIsDeletedTrue(eventDto.getReviewId())
+				.orElseThrow(InvalidParameterException::new);
 
-		if (findReview.isPresent()) {
-			Review deletedReview = findReview.get();
+		Optional<Point> point = pointRepository.findByReviewId(deletedReview.getId());
+		point.ifPresent(pointRepository::delete);
+		// Save Log
+		
+		if (deletedReview.isPastFirstReview()) {
+			Optional<Review> firstPlaceReview = getFirstPlaceReview(deletedReview.getPlace().getId());
 
-			Optional<Point> point = pointRepository.findByReviewId(deletedReview.getId());
-			point.ifPresent(pointRepository::delete);
-
-			if (deletedReview.isFirstReview()) {
-				Optional<Review> firstPlaceReview = getFirstPlaceReview(deletedReview.getPlace().getId());
-
-				firstPlaceReview.ifPresent(review -> {
-					Point updatePoint = Point.builder()
-							.pointType(PointType.REVIEW)
-							.review(review)
-							.user(eventDto.toUserEntity())
-							.build();
-
-					pointRepository.save(updatePoint);
-					// 로그로 남긴다.
-				});
-			}
+			firstPlaceReview.ifPresent(review -> {
+				Optional<Point> updatePoint = pointRepository.findByReviewId(review.getId());
+				updatePoint.get().updatePoint();
+				updatePoint.ifPresent(pointRepository::save);
+				// 로그로 남긴다.
+			});
 		}
+
 	}
 
 	@Transactional

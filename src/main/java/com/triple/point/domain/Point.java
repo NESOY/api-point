@@ -26,10 +26,10 @@ public class Point {
 	private PointType pointType;
 
 	@Column(nullable = false)
-	private LocalDateTime createDatetime;
+	private LocalDateTime createDateTime;
 
 	@Column(nullable = false)
-	private LocalDateTime updateDatetime;
+	private LocalDateTime updateDateTime;
 
 	@OneToOne
 	@JoinColumn(name = "review_id")
@@ -44,8 +44,8 @@ public class Point {
 		this.review = review;
 		this.user = user;
 		this.pointType = pointType;
-		this.createDatetime = LocalDateTime.now();
-		this.updateDatetime = LocalDateTime.now();
+		this.createDateTime = LocalDateTime.now();
+		this.updateDateTime = LocalDateTime.now();
 		this.value = getPoint();
 	}
 
@@ -63,5 +63,9 @@ public class Point {
 			sumOfPoint += 1L;
 
 		return sumOfPoint;
+	}
+
+	public void updatePoint() {
+		this.value = getPoint();
 	}
 }

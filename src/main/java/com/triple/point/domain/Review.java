@@ -72,7 +72,19 @@ public class Review {
 		return place.isFirstReview(this);
 	}
 
+	public boolean isPastFirstReview() {
+		return place.isPastFirstReview(this);
+	}
+
 	public void deleteReview() {
 		this.isDeleted = true;
+	}
+
+	public Boolean isNotDeleted() {
+		return !isDeleted;
+	}
+
+	public Boolean isDeleted() {
+		return isDeleted;
 	}
 }

@@ -10,13 +10,14 @@ import javax.persistence.OrderBy;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Entity
 @Getter
 @NoArgsConstructor
 public class Place {
 	@Id
 	private String id;
-
 	@OneToMany(mappedBy = "place")
 	@OrderBy("create_date_time ASC")
 	private List<Review> reviewList = new ArrayList<>();
@@ -26,7 +27,21 @@ public class Place {
 	}
 
 	public boolean isFirstReview(Review review) {
-		return reviewList.isEmpty() || reviewList.get(0).equals(review);
+		Review firstReview = reviewList.stream()
+				.filter(Review::isNotDeleted)
+				.findFirst().get();
+
+
+		return reviewList.isEmpty() || firstReview.equals(review);
+	}
+
+	public boolean isPastFirstReview(Review review) {
+		List<Review> deletedReviewList = reviewList.stream()
+				.filter(Review::isDeleted)
+				.collect(toList());
+		int lastReviewIndex = deletedReviewList.size() - 1;
+
+		return deletedReviewList.get(lastReviewIndex).equals(review);
 	}
 
 	public void addReview(Review review) {
