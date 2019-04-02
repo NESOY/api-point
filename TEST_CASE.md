@@ -77,3 +77,16 @@
  "placeId": "BUSAN"
 }
 ```
+
+### modified review -> remove content -> 2 -> 1
+```json
+{
+ "type": "REVIEW",
+ "action": "MOD",
+ "reviewId": "NO_CONTENT_ONLY_PHOTO_NOT_FIRST_REVIEW",
+ "content": "",
+ "attachedPhotoIds": ["PHOTO_3"],
+ "userId": "NESOY",
+ "placeId": "BUSAN"
+}
+```

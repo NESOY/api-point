@@ -22,3 +22,4 @@ insert into review(id, place_id, content, create_date_time, update_date_time, is
 -- Point
 insert into point(review_id, user_id, point_type, value, create_date_time, update_date_time) values('DELETED_REVIEW', 'NESOY', 0, 2, '2019-03-31 23:00:00', now())
 insert into point(review_id, user_id, point_type, value, create_date_time, update_date_time) values('REVIEW', 'NESOY', 0, 1, '2019-03-31 23:40:00', now())
+insert into point(review_id, user_id, point_type, value, create_date_time, update_date_time) values('NO_CONTENT_ONLY_PHOTO_NOT_FIRST_REVIEW', 'NESOY', 0, 2, '2019-03-31 23:40:00', now())

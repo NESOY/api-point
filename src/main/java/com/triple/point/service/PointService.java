@@ -39,18 +39,15 @@ public class PointService {
 	}
 
 	@Transactional
+	// partition Update
 	public void modifyPoint(EventDto eventDto) {
 		Optional<Review> findReview = reviewRepository.findByIdAndIsDeletedFalse(eventDto.getReviewId());
 		if (findReview.isPresent()) {
 			Review modifiedReview = findReview.get();
 
-			Point modifiedPoint = Point.builder()
-					.pointType(PointType.REVIEW)
-					.review(modifiedReview)
-					.user(eventDto.toUserEntity())
-					.build();
-
-			pointRepository.save(modifiedPoint);
+			Optional<Point> point = pointRepository.findByReviewId(modifiedReview.getId());
+			point.get().updatePoint();
+			point.ifPresent(pointRepository::save);
 			// 로그
 		}
 	}
@@ -63,7 +60,7 @@ public class PointService {
 		Optional<Point> point = pointRepository.findByReviewId(deletedReview.getId());
 		point.ifPresent(pointRepository::delete);
 		// Save Log
-		
+
 		if (deletedReview.isPastFirstReview()) {
 			Optional<Review> firstPlaceReview = getFirstPlaceReview(deletedReview.getPlace().getId());
 
