@@ -1,4 +1,7 @@
 ### 3 point
+- photo +1
+- content +1
+- first review +1
 ```json
 {
  "type": "REVIEW",
@@ -11,7 +14,10 @@
 }
 ```
 
-### 0 point
+### 0 point  
+- photo 0
+- content 0
+- first review 0 
 ```json
 {
  "type": "REVIEW",
@@ -25,6 +31,9 @@
 ```
 
 ### 1 point
+- content +1
+- photo 0
+- first review 0
 ```json
 {
  "type": "REVIEW",
@@ -38,6 +47,9 @@
 ```
 
 ### 1 point
+- photo +1
+- content 0
+- first review 0 
 ```json
 {
  "type": "REVIEW",
@@ -50,7 +62,10 @@
 }
 ```
 
-### Remove Process
+### Remove first review -> Next first review + Bonus First Review Point
+- photo 0
+- content 0
+- first review +1
 ```json
 {
  "type": "REVIEW",
