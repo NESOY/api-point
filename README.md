@@ -16,3 +16,10 @@ CREATE TABLE `point`.`place` (
   PRIMARY KEY (`place_id`));
 }
 ```
+
+
+## API
+- POST /events
+    - event handling
+- POST /points
+    - query points
