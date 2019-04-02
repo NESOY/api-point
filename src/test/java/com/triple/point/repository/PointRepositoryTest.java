@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -37,5 +39,12 @@ public class PointRepositoryTest {
 		Optional<Point> result = pointRepository.findByReviewId(reviewId);
 
 		assertTrue(result.isPresent());
+	}
+
+	@Test
+	public void UserId로_포인트를_검색할_수_있다() {
+		List<Point> pointList = pointRepository.findByUserId("NESOY");
+
+		assertFalse(pointList.isEmpty());
 	}
 }

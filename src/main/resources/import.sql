@@ -1,5 +1,5 @@
 -- User
-insert into user(user_id) values ('NESOY');
+insert into user(id) values ('NESOY');
 
 -- Place
 insert into place(id) values('SEOUL')

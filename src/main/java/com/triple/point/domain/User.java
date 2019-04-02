@@ -12,12 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 public class User {
 	@Id
-	private String userId;
+	private String id;
 
 	@OneToMany(mappedBy = "user")
 	private List<Point> pointList = new ArrayList<>();
 
-	public User(String userId) {
-		this.userId = userId;
+	public User(String id) {
+		this.id = id;
 	}
 }

@@ -1,11 +1,13 @@
 package com.triple.point.controller;
 
 import com.triple.point.dto.EventDto;
+import com.triple.point.dto.PointDto;
 import com.triple.point.service.PointService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/points")
 public class PointController {
 	private final PointService pointService;
 
@@ -13,13 +15,13 @@ public class PointController {
 		this.pointService = pointService;
 	}
 
-	@GetMapping("/users/{userId}")
-	public long getUserPoint(@PathVariable String userId) {
-		return pointService.getUserPoint(userId);
+	@PostMapping("/events")
+	public void event(@RequestBody EventDto eventDto) {
+		pointService.handleEvent(eventDto);
 	}
 
-	@PostMapping
-	public void event(@RequestBody EventDto eventDto) {
-		pointService.routing(eventDto);
+	@PostMapping("/points")
+	public PointDto getPoints(@RequestBody PointDto pointDto) {
+		return pointService.getPoint(pointDto);
 	}
 }

@@ -3,8 +3,8 @@ package com.triple.point.service;
 import com.triple.point.domain.Point;
 import com.triple.point.domain.PointType;
 import com.triple.point.domain.Review;
-import com.triple.point.domain.User;
 import com.triple.point.dto.EventDto;
+import com.triple.point.dto.PointDto;
 import com.triple.point.repository.PointRepository;
 import com.triple.point.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class PointService {
 		this.reviewRepository = reviewRepository;
 	}
 
-	public void routing(EventDto eventDto) {
+	public void handleEvent(EventDto eventDto) {
 		switch (eventDto.getAction()) {
 			case ADD:
 				savePoint(eventDto);
@@ -90,10 +90,12 @@ public class PointService {
 		}
 	}
 
-	public long getUserPoint(String userId) {
-		List<Point> pointList = pointRepository.findByUser(new User(userId));
+	public PointDto getPoint(PointDto pointDto) {
+		List<Point> pointList = pointRepository.findByUserId(pointDto.getUserId());
 
-		return pointList.stream().mapToLong(Point::getValue).sum();
+		long userPoint = pointList.stream().mapToLong(Point::getValue).sum();
+
+		return PointDto.builder().userId(pointDto.getUserId()).point(userPoint).build();
 	}
 
 
