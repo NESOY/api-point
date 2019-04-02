@@ -1,12 +1,14 @@
 package com.triple.point.domain;
 
 public enum PointType {
-	NORMAL("NORMAL"),
-	BONUS("BONUS");
+	PHOTO("PHOTO"),
+	CONTENT("CONTENT"),
+	FIRST_REVIEW("FIRST_REVIEW");
 
 	private String pointType;
+	private String value;
 
-	PointType(String value) {
-		this.pointType = value;
+	PointType(String pointType) {
+		this.pointType = pointType;
 	}
 }

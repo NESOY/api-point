@@ -1,11 +1,15 @@
 package com.triple.point.service;
 
 import com.triple.point.domain.Point;
+import com.triple.point.domain.PointLog;
+import com.triple.point.domain.PointType;
 import com.triple.point.domain.Review;
 import com.triple.point.dto.EventDto;
 import com.triple.point.dto.PointDto;
+import com.triple.point.repository.PointLogRepository;
 import com.triple.point.repository.PointRepository;
 import com.triple.point.repository.ReviewRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,20 +17,19 @@ import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
+@AllArgsConstructor
 public class PointService {
 	private final PointRepository pointRepository;
 	private final ReviewRepository reviewRepository;
-
-	public PointService(PointRepository pointRepository, ReviewRepository reviewRepository) {
-		this.pointRepository = pointRepository;
-		this.reviewRepository = reviewRepository;
-	}
+	private final PointLogRepository pointLogRepository;
 
 	public void handleEvent(EventDto eventDto) {
 		switch (eventDto.getAction()) {
 			case ADD:
-				savePoint(eventDto);
+				addPoint(eventDto);
 				break;
 			case MOD:
 				modifyPoint(eventDto);
@@ -73,19 +76,27 @@ public class PointService {
 
 	}
 
-	@Transactional
-	public void savePoint(EventDto eventDto) {
+	public void addPoint(EventDto eventDto) {
 		Optional<Review> review = reviewRepository.findByIdAndIsDeletedFalse(eventDto.getReviewId());
-
 		if (review.isPresent()) {
-			Point point = Point.builder()
+			Point point = Point.builder().review(review.get()).user(eventDto.toUserEntity()).build();
+			List<PointType> pointTypeList = point.getPointTypeList();
+			List<PointLog> pointLogList = pointTypeList.stream().map(pointType -> PointLog.builder()
+					.point(point)
 					.review(review.get())
+					.value(1L)
+					.pointType(pointType)
 					.user(eventDto.toUserEntity())
-					.build();
+					.build()).collect(toList());
 
-			pointRepository.save(point);
-			// 로그를 남긴다.
+			savePoint(point, pointLogList);
 		}
+	}
+
+	@Transactional
+	public void savePoint(Point point, List<PointLog> pointLogList) {
+		pointRepository.save(point);
+		pointLogRepository.saveAll(pointLogList);
 	}
 
 	public PointDto getPoint(PointDto pointDto) {

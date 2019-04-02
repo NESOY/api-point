@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.apache.logging.log4j.util.Strings.isNotBlank;
 import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpty;
@@ -17,21 +19,16 @@ import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpt
 public class Point {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long pointId;
-
+	private Long id;
 	@Column
 	private Long value = 0L;
-
 	@Column(nullable = false)
 	private LocalDateTime createDateTime;
-
 	@Column(nullable = false)
 	private LocalDateTime updateDateTime;
-
 	@OneToOne
 	@JoinColumn(name = "review_id")
 	private Review review;
-
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -58,6 +55,21 @@ public class Point {
 			sumOfPoint += 1L;
 
 		this.value = sumOfPoint;
+	}
+
+	public List<PointType> getPointTypeList() {
+		List<PointType> pointTypeList = new ArrayList<>();
+
+		if (isNotBlank(review.getContent()))
+			pointTypeList.add(PointType.CONTENT);
+
+		if (isNotEmpty(review.getPhotoList()))
+			pointTypeList.add(PointType.PHOTO);
+
+		if (review.isFirstReview())
+			pointTypeList.add(PointType.FIRST_REVIEW);
+
+		return pointTypeList;
 	}
 
 	public void update() {
