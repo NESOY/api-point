@@ -1,6 +1,7 @@
 package com.triple.point.controller;
 
 import com.triple.point.dto.EventDto;
+import com.triple.point.dto.EventResponseDto;
 import com.triple.point.dto.PointDto;
 import com.triple.point.service.PointService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +17,10 @@ public class PointController {
 	}
 
 	@PostMapping("/events")
-	public void event(@RequestBody EventDto eventDto) {
+	public EventResponseDto event(@RequestBody EventDto eventDto) {
 		pointService.handleEvent(eventDto);
+
+		return new EventResponseDto(eventDto);
 	}
 
 	@PostMapping("/points")
