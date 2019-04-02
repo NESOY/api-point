@@ -16,6 +16,12 @@ import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpt
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(
+		name = "point",
+		indexes = {
+				@Index(name = "review_index", columnList = "review_id", unique = true),
+				@Index(name = "user_index", columnList = "user_id")
+		})
 public class Point {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

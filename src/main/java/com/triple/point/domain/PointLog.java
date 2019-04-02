@@ -6,6 +6,13 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+		name = "point_log",
+		indexes = {
+				@Index(name = "point_index", columnList = "point_id"),
+				@Index(name = "review_index", columnList = "review_id"),
+				@Index(name = "user_index", columnList = "user_id")
+		})
 public class PointLog {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

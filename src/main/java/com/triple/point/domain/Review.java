@@ -12,6 +12,11 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @ToString
+@Table(
+		name = "review",
+		indexes = {
+				@Index(name = "place_index", columnList = "place_id")
+		})
 public class Review {
 	@Id
 	private String id;
