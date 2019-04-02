@@ -1,7 +1,7 @@
 package com.triple.point.service;
 
+import com.triple.point.domain.Point;
 import com.triple.point.domain.Review;
-import com.triple.point.domain.point.Point;
 import com.triple.point.dto.EventDto;
 import com.triple.point.dto.PointDto;
 import com.triple.point.repository.PointRepository;
