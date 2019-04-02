@@ -29,54 +29,64 @@ public class PointService {
 	public void handleEvent(EventDto eventDto) {
 		switch (eventDto.getAction()) {
 			case ADD:
-				addPoint(eventDto);
+				handleAddEvent(eventDto);
 				break;
 			case MOD:
-				modifyPoint(eventDto);
+				handleModifyEvent(eventDto);
 				break;
 			case DELETE:
-				deletePoint(eventDto);
+				handleDeleteEvent(eventDto);
 				break;
 		}
 	}
 
-	@Transactional
-	// partition Update
-	public void modifyPoint(EventDto eventDto) {
+	public void handleModifyEvent(EventDto eventDto) {
 		Optional<Review> findReview = reviewRepository.findByIdAndIsDeletedFalse(eventDto.getReviewId());
 		if (findReview.isPresent()) {
 			Review modifiedReview = findReview.get();
-
-			Optional<Point> point = pointRepository.findByReviewId(modifiedReview.getId());
-			point.get().update();
-			point.ifPresent(pointRepository::save);
-			// 로그
+			Optional<Point> modifiedPoint = pointRepository.findByReviewId(modifiedReview.getId());
+			modifiedPoint.get().update();
+			modifyPoint(modifiedPoint);
 		}
 	}
 
 	@Transactional
-	public void deletePoint(EventDto eventDto) {
+	public void modifyPoint(Optional<Point> modifiedPoint) {
+		modifiedPoint.ifPresent(pointRepository::save);
+		// Save Log
+	}
+
+	@Transactional
+	public void handleDeleteEvent(EventDto eventDto) {
 		Review deletedReview = reviewRepository.findByIdAndIsDeletedTrue(eventDto.getReviewId())
 				.orElseThrow(InvalidParameterException::new);
 
-		Optional<Point> point = pointRepository.findByReviewId(deletedReview.getId());
-		point.ifPresent(pointRepository::delete);
-		// Save PointLog
+		Optional<Point> deletePoint = pointRepository.findByReviewId(deletedReview.getId());
+		Optional<Point> updatePoint = Optional.empty();
 
 		if (deletedReview.isPastFirstReview()) {
 			Optional<Review> firstPlaceReview = getFirstPlaceReview(deletedReview.getPlace().getId());
-
-			firstPlaceReview.ifPresent(review -> {
-				Optional<Point> updatePoint = pointRepository.findByReviewId(review.getId());
-				updatePoint.get().update();
-				updatePoint.ifPresent(pointRepository::save);
-				// 로그로 남긴다.
-			});
+			updatePoint = pointRepository.findByReviewId(firstPlaceReview.get().getId());
+			updatePoint.get().update();
 		}
 
+		deletePoint(deletePoint, updatePoint);
 	}
 
-	public void addPoint(EventDto eventDto) {
+	private Optional<Review> getFirstPlaceReview(String placeId) {
+		List<Review> reviewList = reviewRepository.findByPlaceIdAndIsDeletedFalseOrderByCreateDateTime(placeId);
+		return Optional.of(reviewList.get(0));
+	}
+
+	@Transactional
+	public void deletePoint(Optional<Point> deletePoint, Optional<Point> updatePoint) {
+		deletePoint.ifPresent(pointRepository::delete);
+		// Save Log
+		updatePoint.ifPresent(pointRepository::save);
+		// Save Log
+	}
+
+	public void handleAddEvent(EventDto eventDto) {
 		Optional<Review> review = reviewRepository.findByIdAndIsDeletedFalse(eventDto.getReviewId());
 		if (review.isPresent()) {
 			Point point = Point.builder().review(review.get()).user(eventDto.toUserEntity()).build();
@@ -107,9 +117,4 @@ public class PointService {
 		return PointDto.builder().userId(pointDto.getUserId()).point(userPoint).build();
 	}
 
-
-	private Optional<Review> getFirstPlaceReview(String placeId) {
-		List<Review> reviewList = reviewRepository.findByPlaceIdAndIsDeletedFalseOrderByCreateDateTime(placeId);
-		return Optional.of(reviewList.get(0));
-	}
 }
