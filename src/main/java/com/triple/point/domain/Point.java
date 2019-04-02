@@ -59,4 +59,9 @@ public class Point {
 
 		this.value = sumOfPoint;
 	}
+
+	public void update() {
+		updatePoint();
+		updateDateTime = LocalDateTime.now();
+	}
 }

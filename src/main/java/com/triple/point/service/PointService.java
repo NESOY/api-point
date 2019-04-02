@@ -45,7 +45,7 @@ public class PointService {
 			Review modifiedReview = findReview.get();
 
 			Optional<Point> point = pointRepository.findByReviewId(modifiedReview.getId());
-			point.get().updatePoint();
+			point.get().update();
 			point.ifPresent(pointRepository::save);
 			// 로그
 		}
@@ -65,7 +65,7 @@ public class PointService {
 
 			firstPlaceReview.ifPresent(review -> {
 				Optional<Point> updatePoint = pointRepository.findByReviewId(review.getId());
-				updatePoint.get().updatePoint();
+				updatePoint.get().update();
 				updatePoint.ifPresent(pointRepository::save);
 				// 로그로 남긴다.
 			});
