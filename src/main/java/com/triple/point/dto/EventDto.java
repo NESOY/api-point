@@ -1,7 +1,7 @@
 package com.triple.point.dto;
 
 import com.triple.point.domain.ActionType;
-import com.triple.point.domain.PointType;
+import com.triple.point.domain.EventType;
 import com.triple.point.domain.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @ToString
 public class EventDto {
-	private PointType type;
+	private EventType type;
 	private ActionType action;
 	private String reviewId;
 	private String content;

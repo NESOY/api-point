@@ -1,12 +1,11 @@
 package com.triple.point.domain;
 
-public enum PointType {
-	NORMAL("NORMAL"),
-	BONUS("BONUS");
+public enum EventType {
+	REVIEW("REVIEW");
 
 	private String pointType;
 
-	PointType(String value) {
+	EventType(String value) {
 		this.pointType = value;
 	}
 }

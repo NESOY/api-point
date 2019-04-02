@@ -23,9 +23,6 @@ public class Point {
 	private Long value = 0L;
 
 	@Column(nullable = false)
-	private PointType pointType;
-
-	@Column(nullable = false)
 	private LocalDateTime createDateTime;
 
 	@Column(nullable = false)
@@ -40,10 +37,9 @@ public class Point {
 	private User user;
 
 	@Builder
-	public Point(Review review, User user, PointType pointType) {
+	public Point(Review review, User user) {
 		this.review = review;
 		this.user = user;
-		this.pointType = pointType;
 		this.createDateTime = LocalDateTime.now();
 		this.updateDateTime = LocalDateTime.now();
 		updatePoint();

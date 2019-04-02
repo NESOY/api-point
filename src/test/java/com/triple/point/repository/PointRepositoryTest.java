@@ -1,9 +1,8 @@
 package com.triple.point.repository;
 
 import com.triple.point.domain.Place;
-import com.triple.point.domain.Point;
-import com.triple.point.domain.PointType;
 import com.triple.point.domain.Review;
+import com.triple.point.domain.point.Point;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +32,7 @@ public class PointRepositoryTest {
 	public void ReviewID로_포인트를_검색할_수_있다() {
 		String reviewId = "240a0658-dc5f-4878-9381-ebb7b2667772";
 		Review review = Review.builder().id(reviewId).place(new Place("2e4baf1c-5acb-4efb-a1af-eddada31b00f")).build();
-		Point point = Point.builder().review(review).pointType(PointType.REVIEW).build();
+		Point point = Point.builder().review(review).build();
 		pointRepository.save(point);
 
 		Optional<Point> result = pointRepository.findByReviewId(reviewId);

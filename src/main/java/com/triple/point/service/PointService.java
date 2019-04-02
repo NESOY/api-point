@@ -1,8 +1,7 @@
 package com.triple.point.service;
 
-import com.triple.point.domain.Point;
-import com.triple.point.domain.PointType;
 import com.triple.point.domain.Review;
+import com.triple.point.domain.point.Point;
 import com.triple.point.dto.EventDto;
 import com.triple.point.dto.PointDto;
 import com.triple.point.repository.PointRepository;
@@ -59,7 +58,7 @@ public class PointService {
 
 		Optional<Point> point = pointRepository.findByReviewId(deletedReview.getId());
 		point.ifPresent(pointRepository::delete);
-		// Save Log
+		// Save PointLog
 
 		if (deletedReview.isPastFirstReview()) {
 			Optional<Review> firstPlaceReview = getFirstPlaceReview(deletedReview.getPlace().getId());
@@ -80,7 +79,6 @@ public class PointService {
 
 		if (review.isPresent()) {
 			Point point = Point.builder()
-					.pointType(PointType.REVIEW)
 					.review(review.get())
 					.user(eventDto.toUserEntity())
 					.build();
