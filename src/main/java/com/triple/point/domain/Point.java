@@ -46,11 +46,10 @@ public class Point {
 		this.pointType = pointType;
 		this.createDateTime = LocalDateTime.now();
 		this.updateDateTime = LocalDateTime.now();
-		this.value = getPoint();
+		updatePoint();
 	}
 
-
-	public Long getPoint() {
+	public void updatePoint() {
 		Long sumOfPoint = 0L;
 
 		if (isNotBlank(review.getContent()))
@@ -62,10 +61,6 @@ public class Point {
 		if (review.isFirstReview())
 			sumOfPoint += 1L;
 
-		return sumOfPoint;
-	}
-
-	public void updatePoint() {
-		this.value = getPoint();
+		this.value = sumOfPoint;
 	}
 }
