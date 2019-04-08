@@ -1,8 +1,8 @@
 package com.triple.point.repository;
 
 import com.triple.point.domain.Place;
+import com.triple.point.domain.Point;
 import com.triple.point.domain.Review;
-import com.triple.point.domain.point.Point;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
